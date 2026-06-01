@@ -1,0 +1,480 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Heart Disease Predictor</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Font Awesome for Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f8f9fa;
+        }
+        .header {
+            background-color: #faf8f8ff;
+            padding: 15px 0;
+            text-align: center;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+        .header h1 {
+            font-weight: 700;
+            color: #333;
+            margin: 0;
+            font-size: 2.5rem;
+        }
+        .header h1 span {
+            color: #dc3545;
+        }
+        /* INPUT FIELDS */
+.form-control,
+.form-select {
+    background: rgba(255, 255, 255, 0.15);   /* transparent */
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    color: white;
+
+    backdrop-filter: blur(5px);
+    -webkit-backdrop-filter: blur(5px);
+
+    border-radius: 8px;
+}
+
+/* Placeholder text */
+.form-control::placeholder {
+    color: #ddd;
+}
+
+/* Dropdown text color fix */
+.form-select option {
+    color: black;  /* keep options readable */
+}                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             
+        .form-container {
+        background: rgba(164, 162, 162, 0.42);  /* transparent white */
+        
+        -webkit-backdrop-filter: blur(10px);   /* for compatibility */
+        border-radius: 12px;
+        padding: 30px;
+        border: 1px solid rgba(255, 255, 255, 0.3);
+        box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+        color: white;   /* text visible */
+        }
+        .form-label {
+            color: #000000ff;
+            font-weight: 750;
+        }
+        .form-control:focus,
+.form-select:focus {
+    background: rgba(255, 255, 255, 0.25);
+    border-color: #00e6e6;
+    box-shadow: 0 0 8px rgba(0, 255, 255, 0.6);
+    color: white;
+}
+.form-control:hover,
+.form-select:hover {
+    border-color: rgba(0, 255, 255, 0.5);
+}
+        .btn-predict {
+            background-color: #dc3545;
+            color: white;
+            border: none;
+            padding: 10px 25px;
+            font-weight: 600;
+            border-radius: 5px;
+            transition: all 0.3s;
+        }
+        .btn-predict:hover {
+            background-color: #c82333;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+        .result-container {
+            background: rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border-radius: 12px;
+            padding: 30px;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+            color: #000000ff;
+        }
+        .result-heading {
+            text-align: center;
+            font-weight: 700;
+            margin-bottom: 20px;
+            color: #000000ff;
+        }
+        .result-card {
+            background: rgba(255, 255, 255, 0.1);  /* transparent */
+            backdrop-filter: blur(8px);
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        .result-status {
+            font-size: 1.2rem;
+            font-weight: 600;
+            padding: 10px 15px;
+            border-radius: 5px;
+            display: inline-block;
+            margin-bottom: 15px;
+        }
+        .result-status.success {
+            background-color: #d4edda;
+            color: #155724;
+        }
+        .result-status.danger {
+            background-color: #f8d7da;
+            color: #721c24;
+        }
+        .result-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        .result-table th, .result-table td {
+            padding: 12px 15px;
+            border-bottom: 1px solid #dee2e6;
+        }
+        .result-table th {
+            font-weight: 600;
+            text-align: left;
+            width: 60%;
+        }
+        .doctor-illustrations {
+            position: absolute;
+            width: 150px;
+        }
+        .doctor-left {
+            left: -50px;
+            top: 20%;
+        }
+        .doctor-right {
+            right: -50px;
+            top: 20%;
+        }
+        @media (max-width: 1200px) {
+            .doctor-illustrations {
+                display: none;
+            }
+        }
+        .leaf-decoration {
+            position: absolute;
+            opacity: 0.7;
+            z-index: -1;
+        }
+        .leaf-top-left {
+            top: 10%;
+            left: 5%;
+            transform: rotate(45deg);
+        }
+        .leaf-bottom-right {
+            bottom: 10%;
+            right: 5%;
+            transform: rotate(215deg);
+        }
+        .header-container {
+            position: relative;
+        }
+        .main-title {
+            position: relative;
+            display: inline-block;
+        }
+        .accent-line {
+            position: absolute;
+            right: -20px;
+            top: 0;
+            height: 100%;
+            width: 3px;
+            background-color: #dc3545;
+        }
+        @media print {
+        .btn, form {
+        display: none;
+        }
+    }
+    .logo-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 15px;
+}
+
+.logo-container img {
+    width: 100px;
+    height: 100px;
+    object-fit: contain;
+}
+
+.college-name {
+    font-size: 1.8rem;
+    font-weight: 680;
+    color: #0d0f96ff;
+}
+.bg-section {
+    background: url("/static/bg_img.jpeg") no-repeat center center;
+    background-size: cover;
+    min-height: 100vh;
+    padding: 40px 0;
+    position: relative;
+}
+
+    </style>
+</head>
+<body>
+    <div class="container py-4">
+        <div class="header-container">
+            <div class="header">
+    
+    <!-- College Logo + Name -->
+    <div class="logo-container mb-2">
+        <img src="{{ url_for('static', filename='collegelogo.jpeg') }}" alt="College logo">
+        <div class="college-name">ST. VINCENT PALLOTTI COLLEGE OF ENGINEERING & TECHNOLOGY, NAGPUR</div>
+    </div>
+
+    <!-- Existing Heading (UNCHANGED) -->
+    <div class="main-title">
+        <h1>Heart Disease <span>Predictor</span></h1>
+    </div>
+
+</div>
+        </div>
+    <div class="bg-section">
+        <div class="row">
+            <div class="col-md-8 mx-auto">
+                <!-- Input Form -->
+                {% if not show_result %}
+                <div class="form-container">
+                    <form action="/predict" method="post">
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label for="name" class="form-label">Name</label>
+                                <input type="text" class="form-control" id="name" name="name" required>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label for="email" class="form-label">Email</label>
+                                <input type="email" class="form-control" id="email" name="email" required>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label for="age" class="form-label">Age</label>
+                                <input type="number" class="form-control" id="age" name="age" min="1" max="120" required>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label for="sex" class="form-label">Sex</label>
+                                <select class="form-select" id="sex" name="sex" required>
+                                    <option value="" selected disabled>Select Gender</option>
+                                    <option value="male">Male</option>
+                                    <option value="female">Female</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label for="chest_pain_type" class="form-label">Chest Pain Type</label>
+                                <select class="form-select" id="chest_pain_type" name="chest_pain_type" required>
+                                    <option value="" selected disabled>Select Type</option>
+                                    <option value="typical_angina">Typical Angina</option>
+                                    <option value="atypical_angina">Atypical Angina</option>
+                                    <option value="non_anginal_pain">Non-Anginal Pain</option>
+                                    <option value="asymptomatic">Asymptomatic</option>
+                                </select>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label for="resting_bp" class="form-label">Resting Blood Pressure (mm/Hg)</label>
+                                <input type="number" class="form-control" id="resting_bp" name="resting_bp" min="50" max="250" required>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label for="cholesterol" class="form-label">Cholesterol Level (mg/dl)</label>
+                                <input type="number" class="form-control" id="cholesterol" name="cholesterol" min="50" max="600" required>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label for="fasting_blood_sugar" class="form-label">Fasting Blood Sugar > 120 mg/dl?</label>
+                                <select class="form-select" id="fasting_blood_sugar" name="fasting_blood_sugar" required>
+                                    <option value="" selected disabled>Select Option</option>
+                                    <option value="yes">Yes</option>
+                                    <option value="no">No</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label for="resting_ecg" class="form-label">Resting ECG Results</label>
+                                <select class="form-select" id="resting_ecg" name="resting_ecg" required>
+                                    <option value="" selected disabled>Select Result</option>
+                                    <option value="normal">Normal</option>
+                                    <option value="st_t_abnormality">ST-T Wave Abnormality</option>
+                                    <option value="left_ventricular_hypertrophy">Left Ventricular Hypertrophy</option>
+                                </select>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label for="max_heart_rate" class="form-label">Maximum Heart Rate Achieved</label>
+                                <input type="number" class="form-control" id="max_heart_rate" name="max_heart_rate" min="50" max="250" required>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label for="exercise_induced_angina" class="form-label">Exercise Induced Angina?</label>
+                                <select class="form-select" id="exercise_induced_angina" name="exercise_induced_angina" required>
+                                    <option value="" selected disabled>Select Option</option>
+                                    <option value="yes">Yes</option>
+                                    <option value="no">No</option>
+                                </select>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label for="st_depression" class="form-label">ST Depression Induced by Exercise</label>
+                                <input type="number" step="0.1" class="form-control" id="st_depression" name="st_depression" min="0" max="10" required>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label for="slope" class="form-label">Slope of Peak Exercise ST Segment</label>
+                                <select class="form-select" id="slope" name="slope" required>
+                                    <option value="" selected disabled>Select Slope</option>
+                                    <option value="upsloping">Upsloping</option>
+                                    <option value="flat">Flat</option>
+                                    <option value="downsloping">Downsloping</option>
+                                </select>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label for="num_vessels" class="form-label">Number of Major Vessels (0-3)</label>
+                                <select class="form-select" id="num_vessels" name="num_vessels" required>
+                                    <option value="" selected disabled>Select Number</option>
+                                    <option value="0">0</option>
+                                    <option value="1">1</option>
+                                    <option value="2">2</option>
+                                    <option value="3">3</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="thal" class="form-label">Thalassemia</label>
+                            <select class="form-select" id="thal" name="thal" required>
+                                <option value="" selected disabled>Select Type</option>
+                                <option value="normal">Normal</option>
+                                <option value="fixed_defect">Fixed Defect</option>
+                                <option value="reversible_defect">Reversible Defect</option>
+                                </select>
+                        </div>
+
+                        <div class="text-center mt-4">
+                            <button type="submit" class="btn btn-predict">Predict Heart Disease</button>
+                        </div>
+                    </form>
+                </div>
+                {% endif %}
+
+                <!-- Results Section -->
+                {% if show_result %}
+                <div class="result-container">
+                    <h2 class="result-heading">Heart Disease Prediction Results</h2>
+                    
+                    <div class="result-card">
+                        {% if "High" in prediction %}
+                        <div class="result-status danger">
+                            <i class="fas fa-exclamation-triangle me-2"></i> {{ prediction }}
+                        </div>
+                        {% else %}
+                        <div class="result-status success">
+                            <i class="fas fa-check-circle me-2"></i> {{ prediction }}
+                        </div>
+                        {% endif %}
+                        
+                        <div class="overall-result mb-4">
+                            <h5>Overall Result: <span class="fw-bold">{{ probability }}% chance that you have heart disease</span></h5>
+                        </div>
+                        
+                        <table class="result-table">
+                            <tr>
+                                <th>Age</th>
+                                <td>{{ data.age }}</td>
+                            </tr>
+                            <tr>
+                                <th>Gender</th>
+                                <td>{{ data.gender }}</td>
+                            </tr>
+                            <tr>
+                                <th>Chest Pain Types</th>
+                                <td>{{ data.chest_pain_types }}</td>
+                            </tr>
+                            <tr>
+                                <th>Resting Blood Pressure (in mm/Hg)</th>
+                                <td>{{ data.resting_blood_pressure }}</td>
+                            </tr>
+                            <tr>
+                                <th>Cholesterol Level</th>
+                                <td>{{ data.cholesterol_level }}</td>
+                            </tr>
+                            <tr>
+                                <th>Is Fasting Blood Pressure >120mg/DL?</th>
+                                <td>{{ data.is_fasting_blood_pressure_greater_than_120mg_dl }}</td>
+                            </tr>
+                            <tr>
+                                <th>Resting Electro Cardio Graphic Result</th>
+                                <td>{{ data.resting_ecg_result }}</td>
+                            </tr>
+                            <tr>
+                                <th>Maximum Heart Rate Achieved</th>
+                                <td>{{ data.maximum_heart_rate }}</td>
+                            </tr>
+                            <tr>
+                                <th>Does Exercise Induced Angina?</th>
+                                <td>{{ data.exercise_induced_angina }}</td>
+                            </tr>
+                            <tr>
+                                <th>Old Peak (ST Depression Induced by Exercise Relative to Rest)</th>
+                                <td>{{ data.st_depression }}</td>
+                            </tr>
+                            <tr>
+                                <th>Slope of ST Segment</th>
+                                <td>{{ data.slope_of_st_segment }}</td>
+                            </tr>
+                            <tr>
+                                <th>Number of Major Vessels (0-3) Colored by Fluoroscopy</th>
+                                <td>{{ data.num_vessels }}</td>
+                            </tr>
+                            <tr>
+                                <th>Thal Type</th>
+                                <td>{{ data.thal_type }}</td>
+                            </tr>
+                        </table>
+                        
+                        <div class="text-center mt-4">
+                            <a href="/" class="btn btn-primary">Make Another Prediction</a>
+                            <button onclick="printReport()" class="btn btn-success ms-2">Generate Report</button>
+                        </div>
+                    </div>
+                </div>
+                {% endif %}
+                
+                {% if error %}
+                <div class="alert alert-danger mt-4">
+                    {{ error }}
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+    </div>
+    <script>
+function printReport() {
+    window.print();
+}
+</script>
+    <!-- Bootstrap & jQuery JS -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
