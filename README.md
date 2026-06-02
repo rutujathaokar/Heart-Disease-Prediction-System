@@ -187,6 +187,8 @@ During literature review, several research papers using Random Forest, SVM, Ense
 ## 👩‍💻 Authors
 
 - Rutuja Thaokar
+- ## Contributors
+- Prachita Wandile
 
 ## 📄 License
 
