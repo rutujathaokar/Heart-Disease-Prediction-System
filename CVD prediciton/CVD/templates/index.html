@@ -220,7 +220,51 @@
     padding: 40px 0;
     position: relative;
 }
+        @media (max-width: 768px) {
 
+    .logo-container {
+        flex-direction: column;
+        text-align: center;
+    }
+
+    .logo-container img {
+        width: 70px;
+        height: 70px;
+    }
+
+    .college-name {
+        font-size: 1rem;
+        padding: 0 10px;
+    }
+
+    .header h1 {
+        font-size: 1.8rem;
+    }
+
+    .form-container,
+    .result-container {
+        padding: 15px;
+    }
+
+    .result-table {
+        font-size: 12px;
+    }
+
+    .btn-predict,
+    .btn-primary,
+    .btn-success {
+        width: 100%;
+        margin-top: 10px;
+    }
+}
+@media (max-width: 768px) {
+    .result-table th,
+    .result-table td {
+        font-size: 11px;
+        padding: 8px;
+        word-break: break-word;
+    }
+}
     </style>
 </head>
 <body>
@@ -243,7 +287,7 @@
         </div>
     <div class="bg-section">
         <div class="row">
-            <div class="col-md-8 mx-auto">
+            <div class="col-12 col-md-10 col-lg-8 mx-auto">
                 <!-- Input Form -->
                 {% if not show_result %}
                 <div class="form-container">
